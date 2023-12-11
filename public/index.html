@@ -1,0 +1,36 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Mobility Control</title>
+</head>
+<body>
+  <button id="forward-btn">Move Forward</button>
+  <button id="brake-btn">Brake</button>
+  <button id="left-btn">Turn Left</button>
+  <button id="right-btn">Turn Right</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById('forward-btn').addEventListener('click', () => {
+      socket.emit('control-command', 'w');
+    });
+
+    document.getElementById('brake-btn').addEventListener('click', () => {
+      socket.emit('control-command', 'm');
+    });
+
+    document.getElementById('left-btn').addEventListener('click', () => {
+      socket.emit('control-command', 'a');
+    });
+
+    document.getElementById('right-btn').addEventListener('click', () => {
+      socket.emit('control-command', 'd');
+    });
+  </script>
+</body>
+</html>
