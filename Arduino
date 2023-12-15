@@ -1,0 +1,122 @@
+#include <Kocoafab_SmartMobility.h>
+#include <SoftwareSerial.h>
+
+Kocoafab_SmartMobility sm = Kocoafab_SmartMobility();
+SoftwareSerial BTSerial(12, 13);
+
+char data;
+bool push = false;
+
+int maxSpeed = 200;
+int speed = 0;
+int speedStep = 10;
+
+void accelerate(int targetSpeed) {
+  while (speed < targetSpeed) {
+    speed += speedStep;
+    sm.setSpeed(speed);
+    Serial.print(speed);
+    delay(50);
+    
+
+   
+  }
+}
+
+void brake() {
+  for (; speed > 0; speed -= speedStep) {
+    sm.setSpeed(speed);
+    delay(50);
+  }
+}
+
+void left() {
+  sm.setSpeed(200);
+  sm.rotate(CCW);
+}
+
+void right() {
+  sm.setSpeed(200);
+  sm.rotate(CW);
+}
+
+
+
+void setup() {
+  Serial.begin(9600);
+  BTSerial.begin(9600);
+
+  if (!sm.begin()) {
+    Serial.println("모터 쉴드 연결을 다시 확인해주세요.");
+    while (1);
+  }
+
+  sm.setSpeed(10);
+  sm.moveTo(5);
+}
+
+void loop() {
+  
+  data = BTSerial.read();
+  
+    
+    
+
+    if (data == 'w') {
+
+        sm.moveF();
+        accelerate(200);
+        push=true;
+      
+      
+    } else if (data == 'm') {
+      brake();
+      push=false;
+    } else if (data == 's') {
+      
+      brake();
+      
+    } else if (data == 'p') {
+      sm.setSpeed(speed);
+    } else if (data == 'a') {
+      //left();
+      
+      sm.setSpeed(3,60);
+      sm.setSpeed(4,60);
+      sm.setSpeed(2,200);
+      sm.setSpeed(1,200);
+
+    } else if (data == 'z') { //좌회전 땟을 때
+      sm.setSpeed(3,100);
+      sm.setSpeed(4,100);
+      sm.setSpeed(2,100);
+      sm.setSpeed(1,100);
+      speed=100;
+      if(push){
+        Serial.println("asd");
+        accelerate(200);
+      }
+     
+      
+    } else if (data == 'd') {
+       
+      sm.setSpeed(3,200);
+      sm.setSpeed(4,200);
+      sm.setSpeed(2,60);
+      sm.setSpeed(1,60);
+    } else if (data == 'c') {
+      speed=100;
+      sm.setSpeed(3,100);
+      sm.setSpeed(4,100);
+      sm.setSpeed(2,100);
+      sm.setSpeed(1,100);
+      if(push){
+        Serial.println("asd");
+        accelerate(200);
+      }
+      
+    }
+  
+
+  // 기타 코드 및 동작 수행
+}
